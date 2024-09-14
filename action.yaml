@@ -1,0 +1,24 @@
+name: 'iOS xcodeproj update for manual code-signing'
+description: 'Updates the xcodeproj file to use manual code-signing'
+inputs:
+  xcodeproj_path:
+    description: The path to the xcodeproj file
+    required: false
+    default: "Runner.xcodeproj"
+  provisioning_profile_path:
+    description: The path to the provisioning profile
+    required: true
+  code_signing_identity:
+    description: The code signing identity to use
+    required: false
+    default: "iPhone Distribution"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update the xcodeproj file for manual code-signing
+      working-directory: ./ios
+      run: |
+        fastlane run update_code_signing_settings use_automatic_signing:false
+        fastlane run update_project_provisioning xcodeproj:"${{ inputs.xcodeproj_path }}" profile:"${{ inputs.provisioning_profile_path }}" code_signing_identity:"${{ inputs.code_signing_identity }}"
+      shell: bash
